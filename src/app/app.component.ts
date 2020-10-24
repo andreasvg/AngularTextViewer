@@ -9,10 +9,6 @@ export class AppComponent {
   title = 'AngularTextViewer';
   public documentContent = '';
 
-  public onSearchTerm(term: string): void {
-    console.log(term);
-  }
-
   public setContentA(): void {
     this.documentContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque venenatis non lorem ac lobortis. Praesent placerat malesuada leo in accumsan. Pellentesque vulputate euismod laoreet. Sed eleifend metus porttitor lorem accumsan pharetra. Nulla pulvinar cursus erat vitae fringilla. Duis posuere ante felis, a pretium diam posuere eu. Suspendisse porttitor arcu nec aliquet sollicitudin. Curabitur lobortis ipsum vel leo faucibus, vel cursus ante iaculis. Pellentesque sed porttitor ex, lacinia pellentesque lacus. Proin euismod non tortor nec ultrices. Nulla quam nisl, dictum quis arcu vel, aliquam facilisis ipsum.
 

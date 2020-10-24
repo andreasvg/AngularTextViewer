@@ -2,7 +2,6 @@ import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angu
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { IResetable } from './IResetable';
 
 @Component({
     selector: 'app-text-search-toolbar',
@@ -36,7 +35,7 @@ export class TextSearchToolbarComponent implements OnInit, OnDestroy {
     }
 
     public onClick(direction: string): void {
-        if (this.searchText.value.length > 0) {
+        if (this.searchText.value && this.searchText.value.length > 0) {
             this.scrollTo.emit(direction);
         }
     }

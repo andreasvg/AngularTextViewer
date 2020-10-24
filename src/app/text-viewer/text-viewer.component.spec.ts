@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ISearchResult } from '../models/ISearchResult';
 import { SearchHighlightPipe } from '../pipes/search-highlight.pipe';
 import { TextSearchToolbarComponent } from './toolbar/text-search-toolbar';
-import { IResetable } from './toolbar/IResetable';
 
 @Pipe({ name: 'safe' })
 export class MockSafePipe implements PipeTransform {
@@ -13,19 +12,19 @@ export class MockSafePipe implements PipeTransform {
   }
 }
 
-@Component({ selector: 'app-text-search-toolbar',
+@Component({
+  selector: 'app-text-search-toolbar',
   template: '<div></div>',
   styles: [''],
   providers: [
     { provide: TextSearchToolbarComponent, useClass: MockTextSearchToolbarComponent }
   ]
 })
-export class MockTextSearchToolbarComponent implements IResetable {
+export class MockTextSearchToolbarComponent {
   @Output() searchTerm: EventEmitter<any> = new EventEmitter<any>();
   @Output() scrollTo: EventEmitter<string> = new EventEmitter<string>();
   @Input() currentItem: number;
   @Input() totalItems: number;
-  @Input() clear: boolean;
   public reset(): void {}
 }
 
@@ -46,6 +45,7 @@ describe(`TextViewerComponent`, () => {
 
     fixture = TestBed.createComponent(TextViewerComponent);
     component = fixture.componentInstance;
+    component.documentContent = 'The quick brown fox jumps over the lazy dog.';
   });
 
   afterAll(() => {
@@ -67,7 +67,6 @@ describe(`TextViewerComponent`, () => {
     it(`should reset the text search toolbar`, () => {
       // Arrange:
       fixture.detectChanges();
-      component.searchToolbar = TestBed.createComponent(MockTextSearchToolbarComponent).componentInstance as IResetable;
 
       spyOn(component.searchToolbar, 'reset');
 

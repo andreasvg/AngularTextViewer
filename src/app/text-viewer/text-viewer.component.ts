@@ -1,9 +1,7 @@
 import { Component, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ISearchResult } from '../models/ISearchResult';
 import { SearchHighlightPipe } from '../pipes/search-highlight.pipe';
-import { IResetable } from './toolbar/IResetable';
 import { TextSearchToolbarComponent } from './toolbar/text-search-toolbar';
-
 
 @Component({
   selector: 'app-text-viewer',
@@ -20,8 +18,9 @@ export class TextViewerComponent implements OnChanges {
   public currentPosition: number;
   public clearSearch: boolean;
 
-  @ViewChild('searchToolbar', { static: false } ) searchToolbar: IResetable;
+  @ViewChild(TextSearchToolbarComponent, { static: false } ) searchToolbar: TextSearchToolbarComponent;
   @ViewChild('documentRef', { static: false }) documentRef: ElementRef;
+
 
   @Input()
   set documentContent(input: string) {
@@ -39,6 +38,8 @@ export class TextViewerComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.searchToolbar) {
       this.searchToolbar.reset();
+      this.currentPosition = 1;
+      this.scrollToElement();
     }
   }
 
