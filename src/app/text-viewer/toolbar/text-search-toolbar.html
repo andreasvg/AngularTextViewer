@@ -1,0 +1,12 @@
+<section class="toolbar mat-typography" [formGroup]="formGroup">
+    <div class="toolbar-strip">
+        <span class="search">
+          <input type="text" [formControl]="searchText" #searchInput id="searchInput" placeholder="Find in document..." />
+        </span>
+
+        <span class="control info" *ngIf="currentItem && totalItems">{{currentItem}} of {{totalItems}}</span>
+        <button class="control left-arrow" (click)="onClick('prev')">Previous</button>
+        <button class="control right-arrow" (click)="onClick('next')">Next</button>
+    </div>
+</section>
+

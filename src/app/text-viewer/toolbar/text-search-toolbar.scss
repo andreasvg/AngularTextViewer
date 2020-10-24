@@ -1,0 +1,65 @@
+.toolbar {
+    height: 30px;
+
+    .toolbar-strip {
+        span {
+            margin-right: 10px;
+            color: white;
+            background-color: #494949;
+            float: left;
+        }
+
+        .search {
+            input {
+                background-color: slategray;
+                border: none;
+                padding: 3px 5px;
+                color: white;
+
+                &::placeholder {
+                    color: white;
+                    font-style: italic;
+                }
+            }
+        }
+
+        .control {
+            &.left-arrow,
+            &.right-arrow {
+                //color: white;
+                position: relative;
+                margin-right: 15px;
+                display: inline-block;
+
+                height: 21px;
+                overflow: hidden;
+
+                > mat-icon {
+                    position: absolute;
+                    cursor: pointer;
+                    top: -1px;
+                }
+            }
+
+            &.left-arrow {
+                margin-right: 0;
+
+                > mat-icon {
+                    position: absolute;
+                    left: 0;
+                    transform: rotate(-180deg);
+                }
+            }
+
+            &.right-arrow>mat-icon {
+                position: absolute;
+            }
+
+            &.info {
+                max-width: 120px;
+                min-width: 40px;
+                padding: 0 6px;
+            }
+        }
+    }
+}

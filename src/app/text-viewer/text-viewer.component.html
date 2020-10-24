@@ -1,0 +1,10 @@
+<section class="textviewer mat-typography" *ngIf="documentContent">
+    <app-text-search-toolbar #searchToolbar (searchTermChanged)="onSearchTerm($event)"
+        (scrollTo)="onScrollTo($event)"
+        [currentItem]="currentPosition" [totalItems]="totalItems"></app-text-search-toolbar>
+    <div #documentRef class="ocr-view mat-body">
+        <pre id="text-content" [innerHtml]="documentContent | safe">
+        </pre>
+    </div>
+</section>
+
