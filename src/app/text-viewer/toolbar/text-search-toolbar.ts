@@ -2,6 +2,7 @@ import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angu
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { IResetable } from './IResetable';
 
 @Component({
     selector: 'app-text-search-toolbar',

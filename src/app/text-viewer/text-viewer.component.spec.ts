@@ -1,10 +1,10 @@
-/* import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { TextViewerComponent } from './text-viewer.component';
-import { SearchHighlightPipe } from 'src/app/pipes/search.pipe';
-import { ExtractSearchHighlightPipe } from 'src/app/pipes/extract-search.pipe';
 import { Component, EventEmitter, Output, Input, Pipe, PipeTransform } from '@angular/core';
-import { StandardDataProvider } from 'src/app/mockDataProviders/standardDataProvider';
-import { ISearchResult } from 'src/app/models/local/ISearchResult';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ISearchResult } from '../models/ISearchResult';
+import { SearchHighlightPipe } from '../pipes/search-highlight.pipe';
+import { TextSearchToolbarComponent } from './toolbar/text-search-toolbar';
+import { IResetable } from './toolbar/IResetable';
 
 @Pipe({ name: 'safe' })
 export class MockSafePipe implements PipeTransform {
@@ -13,30 +13,33 @@ export class MockSafePipe implements PipeTransform {
   }
 }
 
-@Component({ selector: 'app-text-search-toolbar', template: '', styles: [''] })
-export class MockTextSearchToolbarComponent {
+@Component({ selector: 'app-text-search-toolbar',
+  template: '<div></div>',
+  styles: [''],
+  providers: [
+    { provide: TextSearchToolbarComponent, useClass: MockTextSearchToolbarComponent }
+  ]
+})
+export class MockTextSearchToolbarComponent implements IResetable {
   @Output() searchTerm: EventEmitter<any> = new EventEmitter<any>();
   @Output() scrollTo: EventEmitter<string> = new EventEmitter<string>();
   @Input() currentItem: number;
   @Input() totalItems: number;
   @Input() clear: boolean;
+  public reset(): void {}
 }
 
 describe(`TextViewerComponent`, () => {
   let component: TextViewerComponent;
   let fixture: ComponentFixture<TextViewerComponent>;
   let mockSearchHighlighPipe;
-  let mockExtractSearchHighlightPipe;
-  let dataProvider: StandardDataProvider = new StandardDataProvider();
 
   beforeEach(async () => {
     mockSearchHighlighPipe = jasmine.createSpyObj(['transform']);
-    mockExtractSearchHighlightPipe = jasmine.createSpyObj(['transform']);
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: SearchHighlightPipe, useValue: mockSearchHighlighPipe },
-        { provide: ExtractSearchHighlightPipe, useValue: mockExtractSearchHighlightPipe }
+        { provide: SearchHighlightPipe, useValue: mockSearchHighlighPipe }
       ],
       declarations: [TextViewerComponent, MockTextSearchToolbarComponent, MockSafePipe]
     }).compileComponents();
@@ -48,9 +51,7 @@ describe(`TextViewerComponent`, () => {
   afterAll(() => {
     fixture = null;
     component = null;
-    dataProvider = null;
     mockSearchHighlighPipe = null;
-    mockExtractSearchHighlightPipe = null;
   });
 
   it(`should create`, () => {
@@ -62,32 +63,31 @@ describe(`TextViewerComponent`, () => {
     expect(component).toBeTruthy();
   });
 
-  describe(`selectedAnswerPart`, () => {
-    it(`set() should reset class properties`, () => {
+  describe(`ngOnChanges`, () => {
+    it(`should reset the text search toolbar`, () => {
       // Arrange:
       fixture.detectChanges();
-      component.currentPosition = 123;
-      component.totalItems = 100;
-      fixture.detectChanges();
+      component.searchToolbar = TestBed.createComponent(MockTextSearchToolbarComponent).componentInstance as IResetable;
+
+      spyOn(component.searchToolbar, 'reset');
 
       // Act:
-      component.selectedAnswerPart = dataProvider.answerPartModels[0];
+      component.ngOnChanges(null);
 
       // Assert:
-      expect(component.currentPosition).toBeNull();
-      expect(component.totalItems).toBeNull();
+      expect(component.searchToolbar.reset).toHaveBeenCalled();
     });
   });
 
-  describe(`ocrContent`, () => {
+  describe(`documentContent`, () => {
     it(`should return the property as expected`, () => {
       // Arrange:
       const content = 'TEST';
-      component.ocrContent = content;
+      component.documentContent = content;
       fixture.detectChanges();
 
       // Act:
-      const result = component.ocrContent;
+      const result = component.documentContent;
 
       // Assert:
       expect(result).toBe(content);
@@ -97,8 +97,8 @@ describe(`TextViewerComponent`, () => {
   describe(`onSearchTerm`, () => {
     it(`should call the searchHighlightPipe`, () => {
       // Arrange:
-      fixture.detectChanges();
       mockSearchHighlighPipe.transform.and.returnValue(getEmptySearchHighlightTransformResult());
+      fixture.detectChanges();
 
       // Act:
       component.onSearchTerm('search text');
@@ -150,24 +150,6 @@ describe(`TextViewerComponent`, () => {
     });
   });
 
-  describe(`ngAfterViewChecked`, () => {
-    it(`should call the extractSearchHighlightPipe`, fakeAsync(() => {
-      // Arrange:
-      fixture.detectChanges();
-      mockExtractSearchHighlightPipe.transform.and.returnValue('');
-      component.ocrContent = '<div>TEST OCR CONTENT <mark>Test</mark></div>';
-      component.selectedAnswerPart = dataProvider.answerPartModels[0];
-      fixture.detectChanges();
-
-      // Act:
-      component.ngAfterViewChecked();
-      tick(250);
-      fixture.detectChanges();
-
-      // Assert:
-      expect(mockExtractSearchHighlightPipe.transform).toHaveBeenCalled();
-    }));
-  });
 });
 
 function getEmptySearchHighlightTransformResult(): ISearchResult {
@@ -177,4 +159,4 @@ function getEmptySearchHighlightTransformResult(): ISearchResult {
     positions: []
   };
 }
- */
+

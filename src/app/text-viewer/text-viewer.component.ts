@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ISearchResult } from '../models/ISearchResult';
 import { SearchHighlightPipe } from '../pipes/search-highlight.pipe';
+import { IResetable } from './toolbar/IResetable';
 import { TextSearchToolbarComponent } from './toolbar/text-search-toolbar';
 
 
@@ -19,7 +20,7 @@ export class TextViewerComponent implements OnChanges {
   public currentPosition: number;
   public clearSearch: boolean;
 
-  @ViewChild('searchToolbar', { static: true}) searchToolbar: TextSearchToolbarComponent;
+  @ViewChild('searchToolbar', { static: false } ) searchToolbar: IResetable;
   @ViewChild('documentRef', { static: false }) documentRef: ElementRef;
 
   @Input()
@@ -43,6 +44,7 @@ export class TextViewerComponent implements OnChanges {
 
   public onSearchTerm(input: string): void {
     this._searchResult = this.searchHiglightPipe.transform(this._originalContent, input);
+
     this._formattedContent = this._searchResult.value;
     this.totalItems = this._searchResult.count;
     this.currentPosition = 1;
